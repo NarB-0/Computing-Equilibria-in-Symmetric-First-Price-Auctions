@@ -11,7 +11,6 @@ def computeStrategy(canditate_utility, delta, n, bidding_space, cdf_F):
     # last_jump_point_utility = canditate_utility
     strategy[-1] = 1
     utilities[-1] = canditate_utility
-    print(utilities)
 
     # need to look into this because we have bidding space array which goes from b1 to bm 
     # in my implementation it goes from b0 to bm-1
@@ -21,12 +20,11 @@ def computeStrategy(canditate_utility, delta, n, bidding_space, cdf_F):
 
     for i in range(len(bidding_space) , 0 , -1):
         j = i-1
-        if (strategy[i]- bidding_space[j] ) * computation_delta(strategy[i], strategy[i] , cdf_F, n) <= utilities[i] :
+        if (strategy[i] - bidding_space[j] ) * computation_delta(strategy[i], strategy[i] , cdf_F, n) <= utilities[i] :
             # S (i-1) needs to be skipped
             strategy[i-1] = strategy[i]
             utilities[i-1] = utilities[i]
         elif (strategy[i] - bidding_space[j]) * computation_delta(bidding_space[j], strategy[i], cdf_F, n) >= utilities[i]:
-
             strategy[i-1] = bidding_space[j]
             utilities[i-1] = 0 
         else:
@@ -48,10 +46,9 @@ def computation_delta(x, y, cdf_F, n):
 def binarysearch(l,r, cdf_F, n , delta, Ui):
     left = l
     right = r
-    while  (right - left) <= delta:
+    while  (right - left) > delta :
         mid =  (left + right ) / 2
-        print(mid)
-        current_utlity = (r - l ) * computation_delta(mid, right, cdf_F, n)
+        current_utlity = (r - l ) * computation_delta(mid, r, cdf_F, n)
         if  abs(current_utlity - Ui) <= delta:
             return mid
         elif current_utlity < Ui :

@@ -1,1 +1,1 @@
-    print(strategy)
+    # strategy[0] = 0
