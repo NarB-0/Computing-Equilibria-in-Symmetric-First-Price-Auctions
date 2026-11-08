@@ -3,12 +3,12 @@
 import math
 import random
 
-EPSILON = 0.001
-MAX_ITERATIONS = 10
+EPSILON = 0.0001
+MAX_ITERATIONS = 100
 MAX_VALUE = 100
 MAX_BID = 100
 N = 2
-STEP = 1
+STEP = 20
 
 # def generate_bidding_strategy():
 
@@ -115,13 +115,12 @@ def make_clean(bidding_strategy, possible_bids):
 
     return result
 
-
 # bidding_strategy = [0, 0, 0, 0, 0, 0, 0]
 # possible_bids = [0, 25, 50, 75, 100]
 
 # goes up from 0 to exactly MAX_BID in steps of step 
 possible_bids = [num for num in range(0, (MAX_BID )+1 , STEP)]
-possible_values = [i/100 for i in range(0,(MAX_VALUE*100 )+1)]
+possible_values = [i for i in range(0,(MAX_VALUE )+1)]
 
 # bidding_strategy represents (alpha) the vector of thresholds
 bidding_strategy = [value for value in possible_bids]

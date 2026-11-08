@@ -24,12 +24,30 @@ def efficient_e_equilibrium (epsilon, n, bidding_space, cdf_F):
         else:
             right_utility = canditate_utility
             strategy = new_strategy
-        print(new_strategy)
     strategy[0] = 0
     return strategy
 
 if __name__ == "__main__":
     def cdf(x):
         return x
+
+    def make_clean(bidding_strategy, bidding_space):
+        result = "Bidding function = {\n"
+        for i, bid in enumerate(bidding_space):
+            # Skip bids that are never used
+            if bidding_strategy[i] == bidding_strategy[i + 1]:
+                continue
+
+            if i == len(bidding_space) - 1:
+                result += (f"{bid} if {bidding_strategy[i]} <= value <= {bidding_strategy[i + 1]}\n")
+            else:
+                result += (f"{bid} if {bidding_strategy[i]} <= value < {bidding_strategy[i + 1]}\n"
+                )
+        result += "}"
+
+        return result
+
     
-    print(efficient_e_equilibrium(0.0000000000001, 2, [0,0.1, 0.2, 0.3, 0.4,0.5,0.6,0.7,0.8,0.9, 1], cdf))
+    bidding_space = [0,0.2,0.4,0.6,0.8, 1]
+    strategy =  efficient_e_equilibrium(0.0000000001, 3, bidding_space , cdf)
+    print(make_clean(strategy,bidding_space ))
