@@ -3,7 +3,7 @@
 import math
 import random
 
-EPSILON = 0.0001
+EPSILON = 0.1
 MAX_ITERATIONS = 100
 MAX_VALUE = 100
 MAX_BID = 100
@@ -92,9 +92,9 @@ def calculate_deviation(best_utilities, old_strategy):
         old_utilities.append(expected_utility)
 
     deviations = [max(0, best - old) for best, old in zip(best_utilities, old_utilities)]
-    print("chosen bids" + str(chosen_bids) + "\n")
-    print("old_utilities" + str(old_utilities) + "\n")
-    print("deviations" + str(deviations) + "\n")
+    # print("chosen bids" + str(chosen_bids) + "\n")
+    # print("old_utilities" + str(old_utilities) + "\n")
+    # print("deviations" + str(deviations) + "\n")
 
     return max(deviations)
 
@@ -119,7 +119,7 @@ def make_clean(bidding_strategy, possible_bids):
 # possible_bids = [0, 25, 50, 75, 100]
 
 # goes up from 0 to exactly MAX_BID in steps of step 
-possible_bids = [num for num in range(0, (MAX_BID )+1 , STEP)]
+possible_bids = [0, 11, 25, 33, 48, 70]
 possible_values = [i for i in range(0,(MAX_VALUE )+1)]
 
 # bidding_strategy represents (alpha) the vector of thresholds
@@ -127,9 +127,9 @@ bidding_strategy = [value for value in possible_bids]
 # bidding_strategy = generate_bidding_strategy()
 
 bidding_strategy.append(MAX_BID)
-print(" Possible Bids : " + str(possible_bids))
-print("\n Possible Values : " + str(possible_values))
-print("\n Initaial Bidding Strategy : " + str(bidding_strategy))
+# print(" Possible Bids : " + str(possible_bids))
+# print("\n Possible Values : " + str(possible_values))
+# print("\n Initaial Bidding Strategy : " + str(bidding_strategy))
 
 # how much error there is 
 deviation = float(math.inf)
@@ -172,14 +172,14 @@ while iteration < MAX_ITERATIONS :
         # save best bid for each value in best_bids array
         best_bids.append(best_bid)
         best_utilities.append(best_utility)
-        print((value,best_bid ,best_utility)) 
+        # print((value,best_bid ,best_utility)) 
     # print(sum(best_utilities)/len(best_utilities))
 
     new_strategy = compute_new_strategy(best_bids, possible_bids)
     deviation = calculate_deviation(best_utilities, bidding_strategy )
     print(str(bidding_strategy )+ "\n")
 
-    print(str(deviation) + "\n")
+    print("deviation: " + str(deviation) + "\n")
 
     if deviation <= EPSILON : 
         print("Approximate equilibrium found")

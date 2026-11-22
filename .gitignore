@@ -1,0 +1,15 @@
+# Python cache
+
+__pycache__/
+
+*.pyc
+
+# Temporary files
+
+tempCodeRunnerFile.py
+
+# macOS
+
+.DS_Store
+
+**/.DS_Store

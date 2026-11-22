@@ -1,3 +1,4 @@
+import random
 from efficient_method import efficient_e_equilibrium
 from cdfCreator import create_random_2_piecewise_cdf, create_2_piecewise_cdf, create_uniform_cdf
 
@@ -60,5 +61,45 @@ if __name__ == "__main__":
                 print(str(i+1) + " checked")
         print("Number of strategies where bids were skipped : " + str(bid_skipping))
 
+    def generate_random_bidding_space():
+        # 5 bids other than 0
+        n = 5
+        # Generate random, non-equidistant bids
+        bidding_space = [0] + sorted(random.sample([i / 100 for i in range(1, 100)], n))    
+         
+        return bidding_space
 
-    random_cdf_equidistant_bids()
+    def random_bidspace_uniform_cdf():
+        # changfe this so that the bidding space is not equidistant
+        bidding_space = generate_random_bidding_space()
+        print()
+
+        # experiment try 100 times create a random bidding space
+        # with uniform cdf and use it to find the equilibrium 
+        # and find the number of times we have bid skipping
+        no_bid_skipping = 0
+        bid_skipping = 0
+        for i in range(100):
+            bidding_space = generate_random_bidding_space()
+
+            strategy =  efficient_e_equilibrium(4, 2, bidding_space , create_uniform_cdf)
+            if check_bid_skipping(strategy):
+                print(bidding_space)
+                print(make_clean(strategy,bidding_space ))
+                bid_skipping += 1
+            else:
+                no_bid_skipping +=1
+
+            if i % 10 == 9:
+                print(str(i+1) + " checked")
+        print("Number of strategies where bids were skipped : " + str(bid_skipping))
+
+    bidding_space = [0, 0.11, 0.25, 0.33, 0.48, 0.7]
+    strategy =  efficient_e_equilibrium(4, 2, bidding_space , create_uniform_cdf)
+    print(bidding_space)
+    print(make_clean(strategy,bidding_space ))
+
+    bidding_space = [0, 0.11, 0.25, 0.33, 0.7]
+    strategy =  efficient_e_equilibrium(4, 2, bidding_space , create_uniform_cdf)
+    print(bidding_space)
+    print(make_clean(strategy,bidding_space ))
