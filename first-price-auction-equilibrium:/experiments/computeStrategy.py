@@ -20,24 +20,24 @@ def computeStrategy(canditate_utility, delta, n, bidding_space, cdf_F):
 
     for i in range(len(bidding_space) , 0 , -1):
         j = i-1
-        if (strategy[i] - bidding_space[j] ) * computation_delta(strategy[i], strategy[i] , cdf_F, n) <= utilities[i] :
+        if (strategy[i] - bidding_space[j] ) * computation_delta(strategy[i], strategy[i] , cdf_F, n, delta) <= utilities[i] :
             # S (i-1) needs to be skipped
             strategy[i-1] = strategy[i]
             utilities[i-1] = utilities[i]
-        elif (strategy[i] - bidding_space[j]) * computation_delta(bidding_space[j], strategy[i], cdf_F, n) >= utilities[i]:
+        elif (strategy[i] - bidding_space[j]) * computation_delta(bidding_space[j], strategy[i], cdf_F, n, delta) >= utilities[i]:
             strategy[i-1] = bidding_space[j]
             utilities[i-1] = 0 
         else:
             # binary search to find 𝑠𝑖−1 ∈ (𝑏𝑖, 𝑠𝑖)
             # | (𝑠𝑖 − 𝑏𝑖)Δ(𝑠𝑖−1, 𝑠𝑖) − 𝑈𝑖| ≤ delta
             strategy[i-1] =  binarysearch(bidding_space[j], strategy[i], cdf_F, n , delta, utilities[i] )
-            utilities[i-1] = (strategy[i-1] - bidding_space[j] ) * computation_delta(strategy[i-1], strategy[i], cdf_F, n)
+            utilities[i-1] = (strategy[i-1] - bidding_space[j] ) * computation_delta(strategy[i-1], strategy[i], cdf_F, n, delta)
     return strategy
 
-def computation_delta(x, y, cdf_F, n):
+def computation_delta(x, y, cdf_F, n, delta):
     total = 0 
-    x = cdf_F(x)
-    y = cdf_F(y)
+    x = new_cdf(cdf_F, x, delta)
+    y = new_cdf(cdf_F, y, delta)
     for i in range(n):
         total +=  (x ** (n-1-i)) * (y ** i)
 
@@ -48,7 +48,7 @@ def binarysearch(l,r, cdf_F, n , delta, Ui):
     right = r
     while  (right - left) > delta :
         mid =  (left + right ) / 2
-        current_utlity = (r - l ) * computation_delta(mid, r, cdf_F, n)
+        current_utlity = (r - l ) * computation_delta(mid, r, cdf_F, n, delta)
         if  abs(current_utlity - Ui) <= delta:
             return mid
         elif current_utlity < Ui :
@@ -57,3 +57,7 @@ def binarysearch(l,r, cdf_F, n , delta, Ui):
             right = mid
 
     return (left + right) / 2
+
+def new_cdf(cdf,x, delta):
+    # 𝐹′(𝑥) := 𝛿𝑥 + (1 − 𝛿)𝐹 (𝑥)
+    return (delta * x) + ((1 - delta) * cdf(x))
